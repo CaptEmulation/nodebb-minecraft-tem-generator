@@ -1,0 +1,84 @@
+block head
+  title Minecraft Item Generator
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  block neck
+block body
+  .page-header
+    h1 Item Generator
+  section.item
+
+  script(type='text/template', id='tmpl-_item-row')
+    section.description
+    section.type
+    section.enchantments
+    section.preview
+
+  script(type='text/template', id='tmpl-_description-row')
+    label.h3 Description
+    form.form-vertical(role="form").col-lg-3
+      .form-group
+        label.col-sm-4.control-label(for="item-name") Item Name
+        .col-lg-4
+          input#coin-short-name.form-control(type="text", value!='<%-name%>')
+      .form-group
+        label.col-sm-4.control-label(for="item-description") Lore
+        .col-lg-4
+          textarea.form-control(id="loreEditText")
+            !='<%-lore%>'
+
+  script(type='text/template', id='tmpl-_type-row')
+    label.h3 Type
+    form.form-horizontal(role="form").col-lg-2
+      .form-group
+        cell.btn.is-selected.pick(data-pick-id=_id) Axe
+        cell.btn.pick(data-pick-id=_id) Pickaxe
+        cell.btn.pick(data-pick-id=_id) Sword
+        cell.btn.pick(data-pick-id=_id) Shovel
+        cell.btn.pick(data-pick-id=_id) Helmt
+        cell.btn.pick(data-pick-id=_id) Chestplate
+        cell.btn.pick(data-pick-id=_id) Leggings
+        cell.btn.pick(data-pick-id=_id) Boots
+
+  script(type='text/template', id='tmpl-_enchantment-row')
+    label.h3 Enchantments
+    cell.enchantments
+
+  script(type='text/template', id='tmpl-_dropdown-item')
+    .container.dropdown-item
+      label.h4 <%-text%>
+
+  script(type='text/template', id='tmpl-_dropdown-divider')
+
+  script(type='text/template', id='tmpl-_enchantment-dropdown-collection')
+    li.dropdown-header(role="presentation") Enchantment
+
+  script(type='text/template', id='tmpl-_enchantment-dropdown')
+    button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown") Enchantment
+      span.caret
+    .menu
+
+  script(type='text/template', id='tmpl-_enchantment-row')
+
+  script(type='text/template', id='tmpl-_enchantment-row-item')
+    form.form-horizontal(role="form")
+
+  script(type='text/template', id='tmpl-_enchantment-add-row-item')
+    .form-group
+      cell.btn.btn-primary.add(data-enchantment-add-id=_id) Add
+
+  script(type='text/template', id='tmpl-_enchantment-create-row-item')
+    .form-group.dropdown
+    .form-group
+      label.control-label(for="item-name") Power
+      .col-sm-1
+        input#coin-host.form-control(type="text", value!='<%=power%>')
+    .form-group
+      cell.btn.btn-primary.remove(data-enchantment-add-id=_id) Remove
+
+  script(type='text/template', id='tmpl-_preview-row')
+    label.h4 Preview
+    .cell.item-preview
+      !='<%-data%>'
+
+block feet
+  script(src='/js/widget/item/index.js?#{cacheBreaker}')

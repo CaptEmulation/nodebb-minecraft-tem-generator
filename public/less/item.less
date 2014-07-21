@@ -1,0 +1,82 @@
+@import "../vendor/bootstrap-build";
+
+.dropdown-header {
+  text-align: right;
+}
+
+.cell {
+  margin-left: 0.75em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  width: 120px;
+  float: left;
+  text-align: center;
+  padding-top: 0.75em;
+}
+
+section {
+  .make-row();
+  .well();
+  margin-left: 0.75em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-top: 0.75em;
+  padding-right: 1em;
+}
+
+.view-item
+.view-description
+.view-enchantments
+.view-type
+.view-preview {
+  .make-lg-column(3);
+}
+
+.dropdown-item label:hover,
+.dropdown-item:hover {
+  cursor: pointer;
+}
+
+.view-type {
+  .btn.is-selected {
+    .btn-primary();
+  }
+  .btn:not(.is-selected) {
+    .btn-default();
+  }
+
+}
+
+.btn {
+  margin: 0.5em 1.5em 0.5em 1.5em;
+}
+
+form {
+  margin: 0.5em 1.5em 0.5em 1.5em;
+}
+
+.stat {
+  text-align: right;
+}
+.stat-value {
+  color: #555;
+  font-size: 1.4em;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+.stat-label {
+  color: #999;
+  font-weight: bold;
+}
+
+.label {
+  float: left;
+}
+
+.grid {
+  margin: 12px;
+}
+
+.drag {
+  position: absolute;
+}
