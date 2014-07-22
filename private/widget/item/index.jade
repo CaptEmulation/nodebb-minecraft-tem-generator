@@ -17,17 +17,21 @@ block body
     section.preview
 
   script(type='text/template', id='tmpl-_description-row')
-    label.h3 Description
-    form.form-vertical(role="form").col-lg-3
-      .form-group
-        label.col-sm-4.control-label(for="item-name") Item Name
-        .col-lg-4
-          input.item-name.form-control(type="text", value!='<%-name%>')
-      .form-group
-        label.col-sm-4.control-label(for="item-description") Lore
-        .col-lg-4
-          textarea.item-lore.form-control(id="loreEditText")
-            !='<%-lore%>'
+    .row
+      .col-lg-12
+        label.h3 Description
+    .row
+      .col-lg-12
+        form.form-vertical(role="form").col-lg-11
+          .form-group
+            label.col-sm-4.control-label(for="item-name") Item Name
+            input.item-name.form-control(type="text", value!='<%-name%>')
+      .col-lg-12
+        form.form-vertical(role="form").col-lg-11
+          .form-group
+            label.col-sm-4.control-label(for="item-description") Lore
+            textarea.item-lore.form-control(id="loreEditText")
+              !='<%-lore%>'
 
   script(type='text/template', id='tmpl-_type-row')
     label.h3 Type
