@@ -5,12 +5,17 @@ define(function (require, exports, module) {
   var Backbone = require('backbone');
   var object = require('js/util/object');
 
-  var createItemModel = exports.createItemModel = function () {
+  function capitaliseFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  var createItemModel = exports.createItemModel = function (rootModel) {
 
     var model = object.mixin(new (Backbone.Model.extend(_({
       defaults: {
         name: "epic name",
         lore: "epic backstory",
+        id: -1,
         type: "axe",
         material: "wooden"
       },
@@ -23,31 +28,22 @@ define(function (require, exports, module) {
             this.trigger.apply(this, [ 'change' ].concat([].slice.apply(arguments)));
           }, this);
         }.bind(this));
-      },
-      getItemRef: function () {
-        var material = this.getMaterial();
-        var type = this.getType();
-        if (material) {
-          return sTypes[type][material];
-        } else {
-          return sTypes[type];
-        }
-      },
-      getItemId: function () {
-        return this.getItemRef().id;
-      },
-      getItemTypeName: function () {
-        return this.getItemRef().name;
       }
     }).extend(this.prototype)))()).property('Enchantments').getter(function () {
       if (!this.get('ench')) {
-        this.set('ench', createEnchantmentCollection([{}], this));
+        var collection = createEnchantmentCollection([{}], this);
+        collection.root = rootModel;
+        this.set('ench', collection);
       }
       return this.get('ench');
     }).readOnly().property('Name').hasSetter(function (value) {
       this.set('name', value);
     }).getter(function () {
       return this.get('name');
+    }).property('Id').hasSetter(function (value) {
+      this.set('id', value);
+    }).getter(function () {
+      return this.get('id');
     }).property('Lore').hasSetter(function (value) {
       this.set('lore', value);
     }).getter(function () {
@@ -65,203 +61,232 @@ define(function (require, exports, module) {
     return model;
   };
 
+
+
   var sTypes = exports.sTypes = {
     helmet: {
-      leather: {
-        id: 298,
-        name: "Leather Cap"
-      },
-      chain: {
-        id: 302,
-        name: "Chain Helmet"
-      },
-      iron: {
-        id: 306,
-        name: "Iron Helmet"
-      },
-      diamond: {
-        id: 310,
-        name: "Diamond Helmet"
-      },
-      golden: {
-        id: 314,
-        name: "Golden Helmet"
+      name: 'Helmet',
+      materials: {
+        leather: {
+          id: 298,
+          name: "Leather Cap"
+        },
+        chain: {
+          id: 302,
+          name: "Chain Helmet"
+        },
+        iron: {
+          id: 306,
+          name: "Iron Helmet"
+        },
+        golden: {
+          id: 314,
+          name: "Golden Helmet"
+        },
+        diamond: {
+          id: 310,
+          name: "Diamond Helmet"
+        }
       }
     },
     chestplate: {
-      leather: {
-        id: 299,
-        name: "Leather Tunic"
-      },
-      chain: {
-        id: 303,
-        name: "Chain Chestplate"
-      },
-      iron: {
-        id: 307,
-        name: "Iron Chestplate"
-      },
-      diamond: {
-        id: 311,
-        name: "Diamond Chestplate"
-      },
-      golden: {
-        id: 315,
-        name: "Golden Chestplate"
+      name: "Chestplate",
+      materials: {
+          leather: {
+            id: 299,
+            name: "Leather Tunic"
+          },
+          chain: {
+            id: 303,
+            name: "Chain Chestplate"
+          },
+          iron: {
+            id: 307,
+            name: "Iron Chestplate"
+          },
+          golden: {
+            id: 283,
+            name: "Golden Sword"
+          },
+          diamond: {
+            id: 311,
+            name: "Diamond Chestplate"
+          }
       }
     },
     leggings: {
-      leather: {
-        id: 300,
-        name: "Leather Pants"
-      },
-      chain: {
-        id: 304,
-        name: "Chain Leggings"
-      },
-      iron: {
-        id: 308,
-        name: "Iron Leggings"
-      },
-      diamond: {
-        id: 312,
-        name: "Diamond Leggings"
-      },
-      golden: {
-        id: 316,
-        name: "Golden Leggings"
+      name: "Leggings",
+      materials: {
+          leather: {
+            id: 300,
+            name: "Leather Pants"
+          },
+          chain: {
+            id: 304,
+            name: "Chain Leggings"
+          },
+          iron: {
+            id: 308,
+            name: "Iron Leggings"
+          },
+          golden: {
+            id: 316,
+            name: "Golden Leggings"
+          },
+          diamond: {
+            id: 312,
+            name: "Diamond Leggings"
+          }
       }
     },
     boots: {
-      leather: {
-        id: 301,
-        name: "Leather Boots"
-      },
-      chain: {
-        id: 305,
-        name: "Chain Boots"
-      },
-      iron: {
-        id: 309,
-        name: "Iron Boots"
-      },
-      diamond: {
-        id: 313,
-        name: "Diamond Boots"
-      },
-      golden: {
-        id: 317,
-        name: "Golden Boots"
+      name: "Boots",
+      materials: {
+          leather: {
+            id: 301,
+            name: "Leather Boots"
+          },
+          chain: {
+            id: 305,
+            name: "Chain Boots"
+          },
+          iron: {
+            id: 309,
+            name: "Iron Boots"
+          },
+          golden: {
+            id: 317,
+            name: "Golden Boots"
+          },
+          diamond: {
+            id: 313,
+            name: "Diamond Boots"
+          }
       }
     },
     sword: {
-      wooden: {
-        id: 268,
-        name: "Wooden Sword"
-      },
-      golden: {
-        id: 283,
-        name: "Golden Sword"
-      },
-      stone: {
-        id: 272,
-        name: "Stone Sword"
-      },
-      iron: {
-        id: 267,
-        name: "Iron Sword"
-      },
-      diamond: {
-        id: 276,
-        name: "Diamond Sword"
+      name: "Sword",
+      materials: {
+          wooden: {
+            id: 268,
+            name: "Wooden Sword"
+          },
+          stone: {
+            id: 272,
+            name: "Stone Sword"
+          },
+          iron: {
+            id: 267,
+            name: "Iron Sword"
+          },
+          golden: {
+            id: 283,
+            name: "Golden Sword"
+          },
+          diamond: {
+            id: 276,
+            name: "Diamond Sword"
+          }
       }
     },
     axe: {
-      wooden: {
-        id: 271,
-        name: "Wooden Axe"
-      },
-      stone: {
-        id: 275,
-        name: "Wooden Axe"
-      },
-      iron: {
-        id: 258,
-        name: "Iron Axe"
-      },
-      golden: {
-        id: 286,
-        name: "Golden Axe"
-      },
-      diamond: {
-        id: 279,
-        name: "Diamond Axe"
+      name: "Axe",
+      materials: {
+          wooden: {
+            id: 271,
+            name: "Wooden Axe"
+          },
+          stone: {
+            id: 275,
+            name: "Wooden Axe"
+          },
+          iron: {
+            id: 258,
+            name: "Iron Axe"
+          },
+          golden: {
+            id: 286,
+            name: "Golden Axe"
+          },
+          diamond: {
+            id: 279,
+            name: "Diamond Axe"
+          }
       }
     },
     pickaxe: {
-      wooden: {
-        id: 270,
-        name: "Wooden Pickaxe"
-      },
-      stone: {
-        id: 274,
-        name: "Iron Pickaxe"
-      },
-      iron: {
-        id: 257,
-        name: "Iron Pickaxe"
-      },
-      golden: {
-        id: 285,
-        name: "Golden Pickaxe"
-      },
-      diamond: {
-        id: 278,
-        name: "Diamond Pickaxe"
+      name: "Pickaxe",
+      materials: {
+          wooden: {
+            id: 270,
+            name: "Wooden Pickaxe"
+          },
+          stone: {
+            id: 274,
+            name: "Iron Pickaxe"
+          },
+          iron: {
+            id: 257,
+            name: "Iron Pickaxe"
+          },
+          golden: {
+            id: 285,
+            name: "Golden Pickaxe"
+          },
+          diamond: {
+            id: 278,
+            name: "Diamond Pickaxe"
+          }
       }
     },
     shovel: {
-      wooden: {
-        id: 269,
-        name: "Wooden Shovel"
-      },
-      stone: {
-        id: 273,
-        name: "Stone Shovel"
-      },
-      iron: {
-        id: 256,
-        name: "Iron Shovel"
-      },
-      golden: {
-        id: 284,
-        name: "Golden Shovel"
-      },
-      diamond: {
-        id: 277,
-        name: "Diamond Shovel"
+      name: "Shovel",
+      materials: {
+          wooden: {
+            id: 269,
+            name: "Wooden Shovel"
+          },
+          stone: {
+            id: 273,
+            name: "Stone Shovel"
+          },
+          iron: {
+            id: 256,
+            name: "Iron Shovel"
+          },
+          golden: {
+            id: 284,
+            name: "Golden Shovel"
+          },
+          diamond: {
+            id: 277,
+            name: "Diamond Shovel"
+          }
       }
     },
     hoe: {
-      wooden: {
-        id: 290,
-        name: "Wooden Hoe"
-      },
-      stone: {
-        id: 291,
-        name: "Stone Hoe"
-      },
-      iron: {
-        id: 292,
-        name: "Iron Hoe"
-      },
-      golden: {
-        id: 294,
-        name: "Golden Hoe"
-      },
-      diamond: {
-        id: 293,
-        name: "Diamond Hoe"
+      name: "Hoe",
+      materials: {
+          wooden: {
+            id: 290,
+            name: "Wooden Hoe"
+          },
+          stone: {
+            id: 291,
+            name: "Stone Hoe"
+          },
+          iron: {
+            id: 292,
+            name: "Iron Hoe"
+          },
+          golden: {
+            id: 294,
+            name: "Golden Hoe"
+          },
+          diamond: {
+            id: 293,
+            name: "Diamond Hoe"
+          }
       }
     },
     bow: {
@@ -281,6 +306,45 @@ define(function (require, exports, module) {
       name: "Flint and Steel"
     }
   };
+
+
+  exports.createTypeCollection = function () {
+    var TypeModel = Backbone.Model.extend({
+      defaults: {
+        label: "",
+        descriptor: null
+      }
+    });
+
+    var TypeCollection = Backbone.Collection.extend({
+      model: TypeModel
+    });
+
+    var collection = new TypeCollection((function () {
+      var types = [];
+
+      Object.keys(sTypes).forEach(function (key) {
+        var type = sTypes[key];
+        if (type.materials) {
+          types.push({
+            label: type.name,
+            descriptor: type.materials
+          });
+        } else {
+          types.push({
+            label: type.name,
+            descriptor: {
+              id: type.id
+            }
+          });
+        }
+      });
+
+      return types;
+    }()));
+
+    return collection;
+  }
 
 
   /**
@@ -359,6 +423,7 @@ define(function (require, exports, module) {
   }, {
     id: 17,
     text: 'Smite',
+    maxLevel: 5,
     description: 'Increases damage to "undead" mobs (skeletons, zombies, withers, wither skeletons, and zombie pigmen)<br>Each level separately adds 2.5 extra damage to each hit, to "undead" mobs only',
     allowedFromEnchantingTable: ["sword"],
     allowedFromAnvil: ["axe"]
@@ -409,8 +474,8 @@ define(function (require, exports, module) {
     text: "Unbreaking",
     maxLevel: 3,
     description: "Increases durability<br>For most items, (100/(Level+1))% chance a use reduces durability. On average, lifetime is (Level+1) times as long.<br>For armor, (60 + (40/(Level+1)))% chance a use reduces durability. (In other words, each durability hit against “unbreaking” armor has a 20%/27%/30% chance of being ignored.) Thus, on average, armor lasts 25%/36%/43% longer.",
-    allowedFromEnchantingTable: ["sword", "shovel", "axe", "fishingRod", "helmet", "chestplate", "leggings", "boots", "sword", "bow"],
-    allowedFromAnvil: ["hoe", "flintAndSteel"]
+    allowedFromEnchantingTable: ["sword", "shovel", "axe", "fishing rod", "helmet", "chestplate", "leggings", "boots", "sword", "bow"],
+    allowedFromAnvil: ["hoe", "flint and steel"]
   }, {
     id: 35,
     text: "Fortune",
@@ -451,23 +516,26 @@ define(function (require, exports, module) {
     text: "Luck of the Sea",
     maxLevel: 3,
     description: 'Decreases odds of catching worthless junk<br>Lowers chance of "junk" catches by 2.5% per level and increases chance of "treasure" catches by 1% per level.',
-    allowedFromEnchantingTable: ["fishingRod"],
+    allowedFromEnchantingTable: ["fishing rod"],
     allowedFromAnvil: []
   }, {
     id: 62,
     text: "Lure",
     maxLevel: 3,
     description: 'Increases rate of fish biting your hook<br>Decreases wait time until a catch by 5 seconds per level. Also decreases chances of both "junk" and "treasure" catches by 1% per level. At Level VIII the fish-catching particle effects start almost instantly. At Level IX you are not able to catch anything. Neither level can be achieved without editing.',
-    allowedFromEnchantingTable: ["fishingRod"],
+    allowedFromEnchantingTable: ["fishing rod"],
     allowedFromAnvil: []
   }];
 
   var createEnchantmentModel = exports.createEnchantmentModel = function (attributes, parentModel) {
 
-    return object.mixin(new (Backbone.Model.extend({
+    var self = object.mixin(new (Backbone.Model.extend({
       defaults: {
         id: -1,
-        power: 1
+        power: 1,
+        romanPower: "I",
+        maxPower: 1,
+        label: ""
       },
       isEmpty: function () {
         return this.getEnchId() === -1;
@@ -479,13 +547,97 @@ define(function (require, exports, module) {
       this.set('id', value);
     }).getter(function () {
       return this.get('id');
+    }).property('Label').hasSetter(function (value) {
+      this.set('label', value);
+    }).getter(function () {
+      return this.get('label');
+    }).property('MaxPower').hasSetter(function (value) {
+      this.set('maxPower', value);
+    }).getter(function () {
+      return this.get('maxPower');
     }).property('Power').hasSetter(function (value) {
-      this.set('power', value);
+      if (typeof value === "string") {
+        value = parseInt(value);
+      }
+      var maxPower = this.get('maxPower');
+      if (value <= maxPower) {
+          this.set('power', value);
+      }
     }).getter(function () {
       return this.get('power');
     }).property('Type').readOnly().getter(function () {
       return parentModel.getType();
     }).object();
+
+    var numberToRoman = {
+      0: " ",
+      1: "I",
+      2: "II",
+      3: "III",
+      4: "IV",
+      5: "V",
+      6: "VI",
+      7: "VII",
+      8: "VIII",
+      9: "IX"
+    }
+
+    self.on('change:power', function () {
+      self.set('romanPower', numberToRoman[this.getPower()]);
+    }, self);
+
+    self.on("change:id", function () {
+      var descriptor = _.where(exports.sEnchantments, {
+        id: self.getEnchId()
+      });
+      descriptor.some(function (d) {
+        this.setMaxPower(d.maxLevel);
+        if (this.getPower() > this.getMaxPower()) {
+          this.setPower(this.getMaxPower());
+        }
+        return true;
+      }.bind(this));
+    }, self);
+
+    self.root = parentModel;
+
+    return self;
+  }
+
+  var createMaterialCollection = exports.createMaterialCollection = function (rootModel) {
+    var Model = Backbone.Model.extend({
+      defaults: {
+        label: "",
+        id: 0,
+        isSelected: false
+      }
+    })
+
+    var collection = new (Backbone.Collection.extend({
+      model: Model,
+      getSelected: function () {
+        var selecteds = this.where({ isSelected: true });
+        if (selecteds.length) {
+          return selecteds[0];
+        }
+      }
+    }));
+
+    Object.keys(sTypes).forEach(function (type) {
+      var descriptor = sTypes[type];
+      if (descriptor && descriptor.materials && rootModel.getType().toLowerCase() === type.toLowerCase()) {
+        Object.keys(descriptor.materials).forEach(function (key) {
+          var material = descriptor.materials[key];
+          collection.push({
+            label: capitaliseFirstLetter(key),
+            id: material.id,
+            isSelected: false
+          });
+        })
+      }
+    });
+
+    return collection;
   }
 
   var createEnchantmentCollection = exports.createEnchantmentCollection = function (array, parentModel) {
@@ -578,35 +730,69 @@ define(function (require, exports, module) {
         var render = function () {
           var widthInChars = options.loreWidth || 32;
 
-          var model = displayModel.toJSON();
-          this.set('data', JSON.stringify({
-            'name': displayModel.getName(),
-            'ench': displayModel.getEnchantments().toJSON(),
-            'lore': (function () {
-              var lores = [];
-              var lore = displayModel.get('lore').trim();
-              var loreWords = lore.split(' ');
+          var name = displayModel.getName();
+          var lore = (function () {
+            var lores = [];
+            var lore = displayModel.get('lore').trim();
+
+            lore.split('\n').forEach(function (breaks) {
+              var words = breaks.split(' ');
               var lineCount = 0;
               var lineWordCount = 0;
 
               do {
+                words.some(function (word) {
+                  if (lineCount === 0) {
+                    lores.push(word);
+                  } else if ((lineCount + word.length) < widthInChars) {
+                    lores.push(lores.pop() + ' ' + word);
+                  }
+
+                  lineWordCount += 1;
+                  lineCount += word.length + 1;
+                  return lineCount > widthInChars
+                });
+                if (words.length != lineWordCount) {
+                  words = words.slice(-lineWordCount);
+                } else {
+                  words = [];
+                }
+
                 lineCount = 0;
                 lineWordCount = 0;
+              } while (words.length !== 0);
+            });
 
-                loreWords.some(function (word) {
-                  if (lineCount === 0 || (lineCount + word.length) < widthInChars) {
-                    lores.push(lineCount === 0 ? word : (' ' + word));
-                    loreWords.shift();
-                    lineWordCount += 1;
-                  }
-                  lineCount += word.length + 1;
-                  return lineCount < widthInChars
+            return lores;
+          }.bind(this)());
+
+          var ench = (function () {
+            var enchantments = displayModel.getEnchantments().toJSON();
+            var enchs = [];
+
+            enchantments.forEach(function (enchantment) {
+              if (enchantment.id > -1) {
+                enchs.push({
+                  id: enchantment.id,
+                  lvl: enchantment.power
                 });
-              } while (loreWords.length !== 0);
+              }
+            });
 
-              return lores;
-            }.bind(this)())
-          }, null, 2));
+            return enchs;
+          }());
+
+          var data = {
+            'display': {
+              'Name': name,
+              'Lore': lore
+            }
+          };
+          if (ench.length) {
+            data.ench = ench;
+          }
+          var model = displayModel.toJSON();
+          this.set('data', '/give @p ' + displayModel.getId() +' 1 0 ' + JSON.stringify(data))
         }.bind(this);
 
         displayModel.on('change ench:remove', function () {

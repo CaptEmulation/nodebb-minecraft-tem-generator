@@ -7,9 +7,12 @@ block body
     h1 Item Generator
   section.item
 
+  script(type='text/template', id='tmpl-_empty')
+
   script(type='text/template', id='tmpl-_item-row')
     section.description
     section.type
+    section.material
     section.enchantments
     section.preview
 
@@ -19,25 +22,23 @@ block body
       .form-group
         label.col-sm-4.control-label(for="item-name") Item Name
         .col-lg-4
-          input#coin-short-name.form-control(type="text", value!='<%-name%>')
+          input.item-name.form-control(type="text", value!='<%-name%>')
       .form-group
         label.col-sm-4.control-label(for="item-description") Lore
         .col-lg-4
-          textarea.form-control(id="loreEditText")
+          textarea.item-lore.form-control(id="loreEditText")
             !='<%-lore%>'
 
   script(type='text/template', id='tmpl-_type-row')
     label.h3 Type
-    form.form-horizontal(role="form").col-lg-2
-      .form-group
-        cell.btn.is-selected.pick(data-pick-id=_id) Axe
-        cell.btn.pick(data-pick-id=_id) Pickaxe
-        cell.btn.pick(data-pick-id=_id) Sword
-        cell.btn.pick(data-pick-id=_id) Shovel
-        cell.btn.pick(data-pick-id=_id) Helmt
-        cell.btn.pick(data-pick-id=_id) Chestplate
-        cell.btn.pick(data-pick-id=_id) Leggings
-        cell.btn.pick(data-pick-id=_id) Boots
+      .btn-grp
+
+  script(type='text/template', id='tmpl-_material-row')
+    label.h3 Material
+      .btn-grp
+
+  script(type='text/template', id='tmpl-_label-row-item')
+    | <%-label%>
 
   script(type='text/template', id='tmpl-_enchantment-row')
     label.h3 Enchantments
@@ -57,28 +58,42 @@ block body
       span.caret
     .menu
 
-  script(type='text/template', id='tmpl-_enchantment-row')
-
   script(type='text/template', id='tmpl-_enchantment-row-item')
-    form.form-horizontal(role="form")
+    .row
 
   script(type='text/template', id='tmpl-_enchantment-add-row-item')
-    .form-group
-      cell.btn.btn-primary.add(data-enchantment-add-id=_id) Add
+    .add-button.col-md-2.col-sm-5.col-xs-5
+      form.form-vertical(role="form")
+        buton.btn.btn-primary.add Add
 
   script(type='text/template', id='tmpl-_enchantment-create-row-item')
-    .form-group.dropdown
-    .form-group
-      label.control-label(for="item-name") Power
-      .col-sm-1
-        input#coin-host.form-control(type="text", value!='<%=power%>')
-    .form-group
-      cell.btn.btn-primary.remove(data-enchantment-add-id=_id) Remove
+    .remove-button.col-md-2.col-sm-2.col-xs-2
+      form.form-vertical(role="form")
+        buton.btn.btn-danger.remove Remove
+    .form-content.col-md-10.col-sm-10.col-xs-10
+      .row
+        .col-md-5.col-sm-5.col-xs-5
+          form.form-horizontal(role="form")
+            .form-group.dropdown
+        label.col-md-5.col-sm-5.col-xs-5.control-label.enchantment-label
+      .row.power
+
+  script(type='text/template', id='tmpl-_enchantment-create-row-item-power')
+    .col-md-5.col-sm-5.col-xs-5
+      .btn-grp
+        cell.btn.more.btn-default More
+        cell.btn.less.btn-default Less
+    label.col-md-5.col-sm-5.col-xs-5
+      h3 Power <%=romanPower%>
+
 
   script(type='text/template', id='tmpl-_preview-row')
-    label.h4 Preview
-    .cell.item-preview
-      !='<%-data%>'
+    .row
+      label
+        h4 Preview
+    .row
+      textarea.item-preview.form-control
+        !='<%-data%>'
 
 block feet
   script(src='/js/widget/item/index.js?#{cacheBreaker}')

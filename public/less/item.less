@@ -24,12 +24,13 @@ section {
   padding-right: 1em;
 }
 
-.view-item
-.view-description
-.view-enchantments
-.view-type
+.view-item,
+.view-description,
+.view-enchantments,
+.view-type,
+.view-material,
 .view-preview {
-  .make-lg-column(3);
+  //.make-lg-column(3);
 }
 
 .dropdown-item label:hover,
@@ -37,14 +38,18 @@ section {
   cursor: pointer;
 }
 
-.view-type {
+.view-type,
+.view-material {
   .btn.is-selected {
     .btn-primary();
   }
   .btn:not(.is-selected) {
     .btn-default();
   }
+}
 
+.view-preview {
+  min-height: 6em
 }
 
 .btn {
