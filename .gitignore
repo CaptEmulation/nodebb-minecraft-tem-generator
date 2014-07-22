@@ -4,6 +4,8 @@
 *.js.map
 .DS_Store
 
+config.js
+
 
 bower_components
 node_modules

@@ -96,15 +96,15 @@ module.exports = function(grunt) {
           'public/js/index.min.js': [
             'public/js/index.js'
           ],
-          'public/js/core.min.js': [
+          'public/widget-item.min.js': [
             'public/vendor/jquery/jquery.js',
             'public/vendor/underscore/underscore.js',
             'public/vendor/backbone/backbone.js',
             'public/vendor/backbone/backbone.marionette.js',
-            'public/vendor/backbone/backbone.babysitter.js',
             'public/vendor/requirejs/require.js',
             'public/vendor/bootstrap/js/dropdown.js',
-            'public/vendor/momentjs/moment.js'
+            'public/vendor/momentjs/moment.js',
+            'public/js/widget/*.js'
           ],
           'public/js/widget/item/main.min.js': ['public/js/widget/item/main.js']
         }

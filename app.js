@@ -50,7 +50,7 @@ app.locals.cacheBreaker = 'br34k-01';
 //custom (friendly) error handler
 //app.use(require('./views/http/index').http500);
 
-app.get('/widget/item/?', require('./private/widget/item/index').init);
+app.get('/widget/item/?', require('./private/widget/item/index')(app).init);
 
 // Drastic error reporting
 process.on('uncaughtException', function (err) {
