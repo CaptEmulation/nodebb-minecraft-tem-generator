@@ -43,6 +43,8 @@ require.config({
   }
 });
 
+console.log('loader loaded');
+
 require(['item', 'bootstrap-dropdown'], function () {
-  // and we're live
+  console.log('app loaded');
 })

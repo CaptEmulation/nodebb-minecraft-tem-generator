@@ -23,6 +23,7 @@
     "requirejs": "~2.1.14",
     "selectn": "~0.9.6",
     "bootstrap": "~3.2.0",
-    "bootstrap-js-dropdown": "~2.2.1"
+    "bootstrap-js-dropdown": "~2.2.1",
+    "almond": "~0.2.9"
   }
 }

@@ -7,6 +7,10 @@ module.exports = function(grunt) {
       vendor: {
         files: [
           {
+            expand: true, cwd: 'bower_components/almond/',
+            src: ['almond.js'], dest: 'public/vendor/almond/'
+          },
+          {
             expand: true, cwd: 'bower_components/bootstrap/',
             src: ['js/**', 'less/**'], dest: 'public/vendor/bootstrap/'
           },
@@ -68,10 +72,10 @@ module.exports = function(grunt) {
     watch: {
       clientJS: {
          files: [
-          'public/private/**/*.js', '!public/**/*.min.js',
-          'public/public/**/*.js', '!public/**/*.min.js'
+          'public/**/*.js', '!public/**/*.min.js',
+          'public/**/*.js', '!public/**/*.min.js'
          ],
-         tasks: ['newer:uglify', 'newer:jshint:client']
+         tasks: ['newer:uglify', 'newer:jshint:client', 'requirejs:compile']
       },
       serverJS: {
          files: ['private/**/*.js','views/**/*.jade'],
@@ -95,16 +99,6 @@ module.exports = function(grunt) {
         files: {
           'public/js/index.min.js': [
             'public/js/index.js'
-          ],
-          'public/widget-item.min.js': [
-            'public/vendor/jquery/jquery.js',
-            'public/vendor/underscore/underscore.js',
-            'public/vendor/backbone/backbone.js',
-            'public/vendor/backbone/backbone.marionette.js',
-            'public/vendor/requirejs/require.js',
-            'public/vendor/bootstrap/js/dropdown.js',
-            'public/vendor/momentjs/moment.js',
-            'public/js/widget/*.js'
           ],
           'public/js/widget/item/main.min.js': ['public/js/widget/item/main.js']
         }
@@ -181,12 +175,28 @@ module.exports = function(grunt) {
         src: ['{public,private}/**/test/**/*.js']
       }
     },
+    requirejs: {
+      compile: {
+        options: {
+            baseUrl: 'public',
+            mainConfigFile: 'public/js/widget/item/main.js',
+
+            out: 'public/widget-item.min.js',
+            optimize: 'uglify2',
+            wrap: true,
+
+            include: ['js/widget/item/main'],
+            name: 'vendor/almond/almond'
+        }
+      }
+    },
     '--': '$(ps aux | grep "node app.js" | grep -v "grep"); kill -s USR1 $2'
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -195,7 +205,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.registerTask('default', ['copy:vendor', 'newer:uglify', 'newer:less', 'concurrent', 'mochaTest']);
+  grunt.registerTask('default', ['copy:vendor', 'newer:uglify', 'newer:less', 'requirejs:compile', 'concurrent', 'mochaTest']);
   grunt.registerTask('build', ['copy:vendor', 'uglify', 'less']);
   grunt.registerTask('lint', ['jshint']);
 };
