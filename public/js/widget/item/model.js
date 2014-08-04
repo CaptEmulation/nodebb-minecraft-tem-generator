@@ -715,6 +715,74 @@ define(function (require, exports, module) {
     return dropdownCollection;
   }
 
+
+  var is = (function () {
+    var type = function (o) {
+      var s = Object.prototype.toString.call(o);
+      return s.match(/\[object (.*?)\]/)[1].toLowerCase();
+    }
+
+    var that = {};
+
+    ["string", "object", "number", "function", "array", "date", "null", "undefined", "regex"].forEach(function (t) {
+      that[t] = function (v) {
+        return type(v) === t;
+      };
+    });
+
+    return that;
+  }());
+
+  var minecraftJSONStringify = function (object) {
+
+
+    var printObject = function (object) {
+      if (is.object(object)) {
+        return objectToString(object);
+      } else if (is.array(object)) {
+        return arrayToString(object);
+      } else if (is.string(object)) {
+        return '"' + object + '"';
+      } else {
+        return object;
+      }
+    }
+
+    var arrayToString = function (array) {
+      var str = "[";
+
+      array.forEach(function(value, index) {
+        str += printObject(value);
+        // Comma
+        if (array.length > 1 && index < array.length - 1) {
+          str += ","
+        }
+      });
+
+      str += "]";
+
+      return str;
+    }
+
+    var objectToString = function (object) {
+      var str = "{";
+
+      Object.keys(object).forEach(function(key, index, array) {
+        str += key + ":" + printObject(object[key]);
+        // Comma
+        if (array.length > 1 && index < array.length - 1) {
+          str += ","
+        }
+      });
+
+      str += "}";
+
+      return str;
+    };
+
+    return printObject(object);
+  }
+
   var createPreviewModel = exports.createPreviewModel = function () {
     return new (Backbone.Model.extend({
 
@@ -792,7 +860,7 @@ define(function (require, exports, module) {
             data.ench = ench;
           }
           var model = displayModel.toJSON();
-          this.set('data', '/give @p ' + displayModel.getId() +' 1 0 ' + JSON.stringify(data))
+          this.set('data', '/give yourname ' + displayModel.getId() +' 1 0 ' + minecraftJSONStringify(data))
         }.bind(this);
 
         displayModel.on('change ench:remove', function () {

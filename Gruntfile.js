@@ -181,7 +181,7 @@ module.exports = function(grunt) {
             baseUrl: 'public',
             mainConfigFile: 'public/js/widget/item/main.js',
 
-            out: 'public/widget-item.min.js',
+            out: 'public/widget/widget-item.min.js',
             optimize: 'uglify2',
             wrap: true,
 

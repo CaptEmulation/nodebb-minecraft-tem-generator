@@ -1,12 +1,11 @@
 block head
   title Minecraft Item Generator
-  meta(name='viewport', content='width=device-width, initial-scale=1.0')
-  link(rel='stylesheet', href='/css/item.min.css?#{cacheBreaker}')
+  link(rel='stylesheet', href='#{baseUrl}/css/item.min.css?#{cacheBreaker}')
   block neck
 block body
-  .page-header
+  .page-header.nodebb-minecraft
     h1 Item Generator
-  section.item
+  section.item.nodebb-minecraft
 
   script(type='text/template', id='tmpl-_empty')
 
@@ -101,5 +100,4 @@ block body
         !='<%-data%>'
 
 block feet
-  script(type='text/javascript', src='/widget-item.min.js?#{cacheBreaker}')
-// script(type='text/javascript', src='/js/widget/item/index.js?#{cacheBreaker}')
+  script(type='text/javascript', src='#{baseUrl}/widget/widget-item.min.js?#{cacheBreaker}')

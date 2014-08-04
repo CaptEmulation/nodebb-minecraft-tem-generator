@@ -8,8 +8,6 @@ define(function (require, exports, module) {
   var object = require('js/util/object');
   var factory = require('js/widget/item/model');
 
-  console.log('Minecraft Item -- Initializing');
-
   var ItemRow = exports.ItemRow = function (model) {
 
     return new (Marionette.LayoutView.extend({
